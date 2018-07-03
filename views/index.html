@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <title>Hello World for Stride</title>
+  <link rel="stylesheet" type="text/css" href="styles.css" />
+  <link rel="icon" type="image/png" href="https://stride-marketing-cdn.atlassian.com/assets/img/favicons/stride/favicon.png" sizes="32x32">
+</head>
+<body>
+  <div id="content" class="markdown-body"></div>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+  <script>
+    $.ajax('readme.md').done(function(markdown, appKey){
+        markdown = markdown.replace(/\{\{glitch_project_name\}\}/g, window.location.hostname.replace('.glitch.me', ''))
+        document.getElementById('content').innerHTML =  marked(markdown);
+      })
+    .then(function(){
+      $('a[dynamic-url]').each(function(){
+        let $elm = $(this);        
+        $elm.attr('href', $elm.attr('dynamic-url'));
+      })
+    })
+    $.ajax('clientId')
+      .then(function(clientId){
+          if(!clientId)
+            throw new Error('no client id')
+         return $.ajax(`https://connect.atlassian.io/addon/descriptor/${clientId}/latest`)
+      })
+      .then(function(appInfo){
+        let appKey = appInfo.key;
+        $('#InstallButton').append(`<a href="https://app.stride.com/marketplace?target=install&key=${appKey}" target="_blank">
+                                <img width="170" src="https://developer.atlassian.com/cloud/stride/images/stride-connect-button@2x.png"/>
+                             </a>`)
+      })
+      .catch(function(){
+       $('#InstallButton').append(`<b>Error:</b><p>Failed to create app install button. Make sure your clientId is set and correct
+        and that you've followed the steps under "Link the app descriptor"</p>`).css('color','red')
+      })
+  </script> 
+</body>
+</html>
