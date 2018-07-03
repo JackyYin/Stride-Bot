@@ -1,0 +1,31 @@
+{
+  "name": "hello-world-stride",
+  "version": "0.0.1",
+  "description": "A simple glitch Stride bot for getting started with the Stride API",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.16.3",
+    "body-parser": "^1.18.3",
+    "stride-node-client": "^0.2.0",
+    "adf-builder": "^3.3.0",
+    "jwt-simple": "^0.5.1"
+  },
+  "engines": {
+    "node": "8.x"
+  },
+  "repository": {
+    "url": "https://glitch.com/edit/#!/hello-world-stride"
+  },
+  "license": "MIT",
+  "keywords": [
+    "node",
+    "glitch",
+    "Stride",
+    "Atlassian",
+    "Stride API",  
+    "hello world"
+  ]
+}
