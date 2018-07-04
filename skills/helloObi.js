@@ -4,7 +4,7 @@ const { CLIENT_ID, CLIENT_SECRET } = process.env;
 const stride = new Client({ CLIENT_ID, CLIENT_SECRET, NODE_ENV: "production" });
 const { Document } = require('adf-builder');
 
-const GIPHY_API_KEY= "BoYWy5XiRwN4kmfvhdJs6nSZOjGaJ6In";
+const GIPHY_API_KEY = process.env.GIPHY_API_KEY;
 const GIPHY_BASE_URL = "http://api.giphy.com";
 const rp = require("request-promise");
 const fs = require('fs');
@@ -57,16 +57,10 @@ async function searchGIF(cloudId, conversationId, searchOption) {
   
   var image_count = Math.floor(Math.random() * 25);
   console.log("GIF size: ", obj.data[image_count].images.original.size);
-  var stream = await saveGIF(obj.data[image_count].images.original.url);
+  var stream = await downloadImage(obj.data[image_count].images.original.url);
   return stream;
 };
                  
-async function saveGIF(url) {
-  var stream = await downloadImage(url);
-  
-  return stream;
-}; 
-
 //simple utility function to download an image from a website
 async function downloadImage(imgUrl) {
   return new Promise(resolve => {
