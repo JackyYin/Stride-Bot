@@ -60,8 +60,9 @@ app.post("/mentions", auth, async (req, res, next) => {
   let senderId = req.body.message.sender.id;
   //switch 
   switch (option){
-    case '1':
-      await require('./skills/helloObi')(cloudId,conversationId)
+    case 'obi':
+      let searchOption = messageText.replace(`@${(await getBotsUser()).name}`, '').toLocaleLowerCase().trim().split(' ')[1];
+      await require('./skills/helloObi')(cloudId,conversationId, searchOption)
         .then(successHandler, failureHandler);
       break;
     case '2':

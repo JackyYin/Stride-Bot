@@ -5,13 +5,12 @@ const stride = new Client({ CLIENT_ID, CLIENT_SECRET, NODE_ENV: "production" });
 
 const message =
 `
-Stride API Hello World Menu
+Checkin Help Menu
 ------------------------------
 @ mention or direct message this bot with one of these commands:
 
-* \`1\` - Hello Obi
+* \`obi\` - Hello Obi
 
-Inspect all the messages in Stride with the [Developer Toolkit](https://developer.atlassian.com/cloud/stride/developer-toolkit/).
 `;
 
 module.exports = function ( cloudId, conversationId) {
