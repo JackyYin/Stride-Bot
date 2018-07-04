@@ -3,6 +3,7 @@ dependencies:
   body-parser: 1.18.3
   express: 4.16.3
   jwt-simple: 0.5.1
+  randomstring: 1.1.5
   stride-node-client: 0.2.0
 packages:
   /accepts/1.3.5:
@@ -31,6 +32,12 @@ packages:
     dev: false
     resolution:
       integrity: sha1-ml9pkFGx5wczKPKgCJaLZOopVdI=
+  /array-uniq/1.0.2:
+    dev: false
+    engines:
+      node: '>=0.10.0'
+    resolution:
+      integrity: sha1-X8w3OSB3VyPP1k1lxkvvU7+eum0=
   /asn1/0.2.3:
     dev: false
     resolution:
@@ -533,6 +540,13 @@ packages:
       node: '>=0.6'
     resolution:
       integrity: sha512-N5ZAX4/LxJmF+7wN74pUD6qAh9/wnvdQcjq9TZjevvXzSUo7bfmw91saqMjzGS2xq91/odN2dW/WOl7qQHNDGA==
+  /randomstring/1.1.5:
+    dependencies:
+      array-uniq: 1.0.2
+    dev: false
+    hasBin: true
+    resolution:
+      integrity: sha1-bfBij3XL1ZMpMNn+OrTpVqGFGMM=
   /range-parser/1.2.0:
     dev: false
     engines:
@@ -777,4 +791,5 @@ specifiers:
   body-parser: ^1.18.3
   express: ^4.16.3
   jwt-simple: ^0.5.1
+  randomstring: ^1.1.5
   stride-node-client: ^0.2.0

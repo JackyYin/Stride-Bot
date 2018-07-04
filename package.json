@@ -7,11 +7,12 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "express": "^4.16.3",
-    "body-parser": "^1.18.3",
-    "stride-node-client": "^0.2.0",
     "adf-builder": "^3.3.0",
-    "jwt-simple": "^0.5.1"
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "jwt-simple": "^0.5.1",
+    "randomstring": "^1.1.5",
+    "stride-node-client": "^0.2.0"
   },
   "engines": {
     "node": "8.x"
@@ -25,7 +26,7 @@
     "glitch",
     "Stride",
     "Atlassian",
-    "Stride API",  
+    "Stride API",
     "hello world"
   ]
 }

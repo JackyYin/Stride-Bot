@@ -6,77 +6,72 @@ const { Document } = require('adf-builder');
 
 const GIPHY_API_KEY= "BoYWy5XiRwN4kmfvhdJs6nSZOjGaJ6In";
 const GIPHY_BASE_URL = "http://api.giphy.com";
+const rp = require("request-promise");
+const fs = require('fs');
+let https = require('https');
+let randomstring = require('randomstring');
 
-
-
-module.exports = async function ( cloudId, conversationId) {
-  var opts = await searchGIF(cloudId, conversationId);
+module.exports = async function ( cloudId, conversationId, searchOption) {
   
-  //send response to the conversation
-  return stride.api.messages.sendMessage(cloudId, conversationId, opts)
+  var stream = await searchGIF(cloudId, conversationId, searchOption);  
+  
+  // Then, upload it to Stride
+  const uploadOpts = {
+      headers: { 'Content-Type': 'application/octet-stream' },
+      body: stream,
+    };
+  var uploadString = await stride.api.media.upload(cloudId, conversationId, randomstring.generate(10) + '.gif', uploadOpts);
+  var upload = JSON.parse(uploadString);
+
+  //send response to the conversation   
+  const doc = new Document();
+  const mediaGroup = doc.mediaGroup();
+  
+  mediaGroup .media({
+    "id": upload.data.id,
+    "type": "file",
+    "collection": conversationId
+  });
+  return stride.api.messages.sendMessage(cloudId, conversationId, {body: doc.toJSON()})
 };
 
-async function searchGIF(cloudId, conversationId) {
-  var rp = require("request-promise");
-  var propertiesObject = { q:'love', api_key: GIPHY_API_KEY, limit: 1 };
+async function searchGIF(cloudId, conversationId, searchOption) {
   const options = {
 		url: GIPHY_BASE_URL + '/v1/gifs/search',
 		qs: {
-			q: 'love',
+			q: searchOption,
       api_key: GIPHY_API_KEY,
-      limit: 1,
 		},
 	};
     
-  var opts = rp(options, function(err, response, body) {
+  var obj = await rp(options, function(err, response, body) {
     if(err) {
       console.log(err);
     }
   }).then(function (parseBody) {
     var obj = JSON.parse(parseBody);
-    var result1 = getGIF(obj.data[0].images.fixed_height_still.url);
-    //console.log(result1);
-    
-    return  {
-      body: JSON.stringify(obj.data[0]),
-      headers: { "Content-Type": "text/plain", accept: "application/json" }
-    };
+    return obj;
   }).catch(function(err){
     console.log(err);
   });
-  return opts;
+  
+  var image_count = Math.floor(Math.random() * 25);
+  console.log("GIF size: ", obj.data[image_count].images.original.size);
+  var stream = await saveGIF(obj.data[image_count].images.original.url);
+  return stream;
 };
                  
-async function getGIF(url) {
-  var fs = require('fs'),
-    request = require('request');
-
-  var download = function(url, filename, callback){
-    request.head(url, function(err, res, body){
-      console.log('content-type:', res.headers['content-type']);
-      console.log('content-length:', res.headers['content-length']);
-
-      request(url).pipe(fs.createWriteStream(filename)).on('close', callback);
-    });
-  };
+async function saveGIF(url) {
+  var stream = await downloadImage(url);
   
-  download(url, 'test.gif', function(){
-    console.log('done');
-  });
-  return true;
+  return stream;
 }; 
-  
-  
-  //console.log("Get response: "+ JSON.stringify(opts));
-  
-  //creating the response message
-  //const doc = new Document();
 
-  //const mediaGroup = doc.mediaGroup();
-  
-  //mediaGroup .media({
-  //  "id": "5e0baf6c-0908-4dde-84d2-e1e016cc3f8c",
-  //  "type": "file",
-  //  "collection": conversationId
-  //});
-  
+//simple utility function to download an image from a website
+async function downloadImage(imgUrl) {
+  return new Promise(resolve => {
+    https.get(imgUrl, function(stream) {
+      resolve(stream);
+    });
+  });
+}  
