@@ -9,8 +9,8 @@ Checkin Help Menu
 ------------------------------
 @ mention or direct message this bot with one of these commands:
 
-* \`obi\` - Hello Obi
-
+* \`giphy\`  \`keyword\` - giphy find something
+* \`register\`  \`email\` - register in checkin system
 `;
 
 module.exports = function ( cloudId, conversationId) {
