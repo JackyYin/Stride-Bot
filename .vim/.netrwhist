@@ -1,7 +1,8 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhist_cnt =5
+let g:netrw_dirhist_cnt =6
 let g:netrw_dirhist_1='/app/.git'
 let g:netrw_dirhist_2='/app/.vim'
 let g:netrw_dirhist_3='/app/.data'
 let g:netrw_dirhist_4='/app/.config'
 let g:netrw_dirhist_5='/app/.config/configstore'
+let g:netrw_dirhist_6='/app'

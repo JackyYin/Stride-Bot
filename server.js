@@ -12,6 +12,7 @@ const stride = new Client({ CLIENT_ID, CLIENT_SECRET, NODE_ENV: "production" });
 //Middleware
 const auth = require("./middleware/auth")(CLIENT_SECRET);
 const tutorialMiddleware = require("./middleware/tutorialEndpoints");
+const checkinMiddleware = require("./middleware/checkinEndpoints");
 const lifecycle = require("./middleware/lifecycle");
 
 let botUser = null;
@@ -30,6 +31,7 @@ async function getBotsUser(){
 
 app.use(bodyParser.json());
 app.use(tutorialMiddleware);
+app.use(checkinMiddleware);
 app.use(lifecycle);
 
 /**
@@ -60,9 +62,14 @@ app.post("/mentions", auth, async (req, res, next) => {
   let senderId = req.body.message.sender.id;
   //switch 
   switch (option){
-    case 'obi':
+    case 'giphy':
       let searchOption = messageText.replace(`@${(await getBotsUser()).name}`, '').toLocaleLowerCase().trim().split(' ')[1];
-      await require('./skills/helloObi')(cloudId,conversationId, searchOption)
+      await require('./skills/giphy')(cloudId,conversationId, searchOption)
+        .then(successHandler, failureHandler);
+      break;
+    case 'register':
+      let email = messageText.replace(`@${(await getBotsUser()).name}`, '').toLocaleLowerCase().trim().split(' ')[1];
+      await require('./skills/register')(cloudId,conversationId, senderId, email)
         .then(successHandler, failureHandler);
       break;
     case '2':
