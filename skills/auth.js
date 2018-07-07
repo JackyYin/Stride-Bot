@@ -18,11 +18,14 @@ var config = {
   storageBucket: "stride-bot-a9c85.appspot.com",
   messagingSenderId: "151580747908"
 };
-firebase.initializeApp(config);
+if (!firebase.apps.length) {
+    firebase.initializeApp(config);
+}
+const db = firebase.database();
 
 module.exports = async function ( cloudId, conversationId, messageSenderId, email) {
 
-  var message = await register(cloudId, conversationId, messageSenderId, email);
+  var message = await auth(cloudId, conversationId, messageSenderId, email);
   
   let opts = {
     body: message,
@@ -33,9 +36,9 @@ module.exports = async function ( cloudId, conversationId, messageSenderId, emai
   return stride.api.messages.sendMessage(cloudId, conversationId, opts)
 };
 
-async function register(cloudId, conversationId, messageSenderId, email) {
+async function auth(cloudId, conversationId, messageSenderId, email) {
   const options = {
-    uri: CHECKIN_BASE_URL + "/api/v2/register",
+    uri: CHECKIN_BASE_URL + "/api/v2/bot/auth",
     method: 'POST',
     headers: {
       authorization: "Bearer " + CHECKIN_BOT_TOKEN,
@@ -45,7 +48,6 @@ async function register(cloudId, conversationId, messageSenderId, email) {
       email: email
     }
   }
-  const db = firebase.database();
   
   var reply = await rp(options)
   .then(function (res) {
@@ -63,7 +65,7 @@ async function register(cloudId, conversationId, messageSenderId, email) {
     return res.reply_message;
   })
   .catch(function(err){
-    console.log("error: ", err.error.reply_message);
+    console.log("error: ", err);
     return err.error.reply_message;
   });
   
