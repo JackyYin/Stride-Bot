@@ -10,7 +10,8 @@ Checkin Help Menu
 @ mention or direct message this bot with one of these commands:
 
 * \`giphy\`  \`keyword\` - giphy find something
-* \`register\`  \`email\` - register in checkin system
+* \`auth\`  \`email\` - connecting to checkin system
+* \`annual\` - get annual leaves stat
 `;
 
 module.exports = function ( cloudId, conversationId) {

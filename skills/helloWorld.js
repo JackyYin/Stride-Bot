@@ -6,7 +6,7 @@ const stride = new Client({ CLIENT_ID, CLIENT_SECRET, NODE_ENV: "production" });
 
 module.exports = function ( cloudId, conversationId) {
   let opts = {
-    body: "**_Hello World!_**", //Markdown hello world
+    body: "**_Obi 他媽智障！_**", //Markdown hello world
     headers: { "Content-Type": "text/markdown", accept: "application/json" }
   };
 
