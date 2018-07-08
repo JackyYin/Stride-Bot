@@ -12,6 +12,7 @@ Checkin Help Menu
 * \`giphy\`  \`keyword\` - giphy find something
 * \`auth\`  \`email\` - connecting to checkin system
 * \`annual\` - get annual leaves stat
+* \`chart\` - get personal leave chart
 `;
 
 module.exports = function ( cloudId, conversationId) {

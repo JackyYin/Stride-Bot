@@ -69,11 +69,15 @@ app.post("/mentions", auth, async (req, res, next) => {
       break;
     case 'auth':
       let email = messageText.replace(`@${(await getBotsUser()).name}`, '').toLocaleLowerCase().trim().split(' ')[1];
-      await require('./skills/auth')(cloudId,conversationId, senderId, email)
+      await require('./skills/checkin/auth')(cloudId,conversationId, senderId, email)
         .then(successHandler, failureHandler);
       break;
     case 'annual':
-      await require('./skills/annualStat')(cloudId,conversationId, senderId)
+      await require('./skills/checkin/annualStat')(cloudId,conversationId, senderId)
+        .then(successHandler, failureHandler);
+      break;
+    case 'chart':
+      await require('./skills/checkin/chart')(cloudId,conversationId, senderId)
         .then(successHandler, failureHandler);
       break;
     case '2':
