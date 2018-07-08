@@ -22,6 +22,7 @@ module.exports = async function ( cloudId, conversationId, searchOption) {
     };
   var uploadString = await stride.api.media.upload(cloudId, conversationId, randomstring.generate(10) + '.gif', uploadOpts);
   var upload = JSON.parse(uploadString);
+  console.log(upload);
 
   //send response to the conversation   
   const doc = new Document();
