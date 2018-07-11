@@ -18,7 +18,7 @@ const auth = require("./auth")(process.env.CLIENT_SECRET);
 router.get("/descriptor", function(req, res) {
   res.json({
     baseUrl: `https://${req.headers.host}`,
-    key: "hello-world-glitch",
+    key: "checkin",
     lifecycle: {
       installed: "/installed",
       uninstalled: "/uninstalled"
@@ -35,15 +35,68 @@ router.get("/descriptor", function(req, res) {
           }
         }
       ],
-      "chat:actionTarget":[{
-        "key": "actionTarget-cardActions",
-        "callService": {
-          "url": "/cardActions"
+      "chat:dialog": [
+        {
+          key: 'dialog-leaveChart',
+          title: {
+            value: 'Leave Chart Dialog',
+          },
+          options: {
+            size: {
+              width: '500px',
+              height: '500px',
+            },
+            primaryAction: {
+              key: 'dialogAction-sendForm',
+              name: {
+                value: 'Send',
+              },
+            },
+            secondaryActions: [
+              {
+                key: 'dialogAction-closeDialog',
+                name: {
+                  value: 'Close',
+                },
+              },
+            ],
+          },
+          url: '/dialogs/dialog/leaveChart',
+          authentication: 'jwt',
         },
-        "parameters": {
-          "easter": "egg"
+      ],
+      "chat:glance": [
+        {
+          key: 'glance-leaveChart',
+          name: {
+            value: 'Leave Chart',
+          },
+          icon: {
+            url: '/public/img/logo.png',
+            'url@2x': '/public/img/logo.png',
+          },
+          target: 'actionTarget-sendToDialog-leaveChart',
+          queryUrl: '/glances/glance/leaveChart/state',
+          authentication: 'jwt',
         }
-      }]
+      ],
+      "chat:actionTarget":[
+        {
+          "key": "actionTarget-cardActions",
+          "callService": {
+            "url": "/cardActions"
+          },
+          "parameters": {
+            "easter": "egg"
+          }
+        },
+        {
+          key: 'actionTarget-sendToDialog-leaveChart',
+          openDialog: {
+            key: 'dialog-leaveChart',
+          },
+        },
+      ]
     }
   });
 });

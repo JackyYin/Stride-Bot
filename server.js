@@ -8,12 +8,31 @@ const Client = require("stride-node-client");
 const { CLIENT_ID, CLIENT_SECRET } = process.env;
 const stride = new Client({ CLIENT_ID, CLIENT_SECRET, NODE_ENV: "production" });
 
-
 //Middleware
 const auth = require("./middleware/auth")(CLIENT_SECRET);
 const tutorialMiddleware = require("./middleware/tutorialEndpoints");
 const checkinMiddleware = require("./middleware/checkinEndpoints");
 const lifecycle = require("./middleware/lifecycle");
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }))
+// parse application/json
+app.use(bodyParser.json());
+app.use(tutorialMiddleware);
+app.use(checkinMiddleware);
+app.use(lifecycle);
+
+//public assets
+app.use('/public/templates', express.static('public/templates'));
+app.use('/public/js', express.static('public/js'));
+app.use('/public/img', express.static('public/img'));
+
+//route definition
+const routes = require("./routes");
+
+app.use("/glances", routes.glances);
+app.use("/sidebars", routes.sidebars);
+app.use("/dialogs",  routes.dialogs);
 
 let botUser = null;
 
@@ -29,10 +48,6 @@ async function getBotsUser(){
   return botUser;
 }
 
-app.use(bodyParser.json());
-app.use(tutorialMiddleware);
-app.use(checkinMiddleware);
-app.use(lifecycle);
 
 /**
  *  @see {@link https://developer.atlassian.com/cloud/stride/apis/modules/chat/bot-messages | API Reference: Bot messages }
