@@ -31,7 +31,6 @@ app.use('/public/img', express.static('public/img'));
 const routes = require("./routes");
 
 app.use("/glances", routes.glances);
-app.use("/sidebars", routes.sidebars);
 app.use("/dialogs",  routes.dialogs);
 
 let botUser = null;
