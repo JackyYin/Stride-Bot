@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+
+<!-- Sample implementation of a chat:dialog module -->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leave Chart Dialog</title>
+
+    <!-- Import AtlasKit: https://atlaskit.atlassian.com -->
+    <link rel="stylesheet" href="//unpkg.com/@atlaskit/css-reset@latest"/>
+    <link rel="stylesheet" href="//unpkg.com/@atlaskit/reduced-ui-pack@latest"/>
+
+    <!-- Import JQuery -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+    <!-- Import the Stride Javascript API -->
+    <script src="https://dev-lib.stride.com/javascript/simple-xdm.js"></script>
+  
+  
+    <!-- Import Firebase DB  -->
+    <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
+  
+    <!-- Import Date Picker Plugin  -->
+	  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  
+    <!-- Import local JS file  -->
+	  <script src="/public/js/dialogs/leaveChart.js"></script>
+
+</head>
+<body>
+<p>查詢個人請假狀態,日期為非必填</p>
+
+<form>
+    <div class="ak-field-group">
+        <label for="start_date">開始日期</label>
+        <input type="text" class="ak-field-text" id="start_date" name="start_date" placeholder="">
+    </div>
+    <div class="ak-field-group">
+        <label for="end_date">結束日期</label>
+        <input type="text" class="ak-field-text" id="end_date" name="end_date" placeholder="">
+    </div>
+</form>
+
+</body>
+</html>

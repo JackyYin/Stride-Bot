@@ -6,9 +6,6 @@ const { Document } = require('adf-builder');
 
 const CHECKIN_BASE_URL = process.env.CHECKIN_BASE_URL;
 const rp = require("request-promise");
-const request = require("request");
-const http = require('http');
-const fs = require('fs');
 const randomstring = require('randomstring');
 const firebase = require('firebase');
 
