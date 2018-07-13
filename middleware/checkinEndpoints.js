@@ -31,7 +31,7 @@ router.get('/clientId', (req,res)=>{
   res.send(CLIENT_ID)
 })
 
-router.post('/checkin/auth/active', function(request, response) {
+router.post('/checkin/auth/verify', function(request, response) {
   console.log(request.body.reply_message);
   firebase.database().ref('users').orderByChild("email").equalTo(request.body.reply_message.email).once("value",function(snapshot){
     var key = Object.keys(snapshot.val())[0];
