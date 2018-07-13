@@ -72,7 +72,8 @@ router.get("/descriptor", function(req, res) {
             value: 'Leave Chart',
           },
           icon: {
-            url: '/public/img/leaveChartGlance.png',
+            'url': '/public/img/leaveChartGlance.png',
+            'url@2x': '/public/img/leaveChartGlance.png',
           },
           target: 'actionTarget-sendToDialog-leaveChart',
           queryUrl: '/glances/glance/leaveChart/state',
