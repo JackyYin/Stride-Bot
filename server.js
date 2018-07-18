@@ -11,7 +11,6 @@ const stride = new Client({ CLIENT_ID, CLIENT_SECRET, NODE_ENV: "production" });
 //Middleware
 const auth = require("./middleware/auth")(CLIENT_SECRET);
 const tutorialMiddleware = require("./middleware/tutorialEndpoints");
-const checkinMiddleware = require("./middleware/checkinEndpoints");
 const lifecycle = require("./middleware/lifecycle");
 
 // parse application/x-www-form-urlencoded
@@ -19,7 +18,6 @@ app.use(bodyParser.urlencoded({ extended: false }))
 // parse application/json
 app.use(bodyParser.json());
 app.use(tutorialMiddleware);
-app.use(checkinMiddleware);
 app.use(lifecycle);
 
 //public assets
@@ -31,7 +29,8 @@ app.use('/public/img', express.static('public/img'));
 const routes = require("./routes");
 
 app.use("/glances", routes.glances);
-app.use("/dialogs",  routes.dialogs);
+app.use("/dialogs", routes.dialogs);
+app.use("/checkin", routes.checkin);
 
 let botUser = null;
 
@@ -46,7 +45,6 @@ async function getBotsUser(){
   }
   return botUser;
 }
-
 
 /**
  *  @see {@link https://developer.atlassian.com/cloud/stride/apis/modules/chat/bot-messages | API Reference: Bot messages }
@@ -92,6 +90,11 @@ app.post("/mentions", auth, async (req, res, next) => {
       break;
     case 'chart':
       await require('./skills/checkin/chart')(cloudId,conversationId, senderId)
+        .then(successHandler, failureHandler);
+      break;
+    case 'direct':
+       let message = messageText.replace(`@${(await getBotsUser()).name}`, '').toLocaleLowerCase().trim().split(' ')[1];
+       await require('./skills/direct')(cloudId,conversationId, senderId, message)
         .then(successHandler, failureHandler);
       break;
     case '2':

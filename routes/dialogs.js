@@ -35,6 +35,37 @@ const randomstring = require('randomstring');
 ]
 ```
 **/
+async function requestChart(access_token, date) {
+  var url = CHECKIN_BASE_URL + "/api/v2/leave?";
+  console.log(date);
+  date.forEach(function (object) {
+    if (Object.values(object) != '') {
+      url += Object.keys(object) + "=" + Object.values(object) + "&";
+    }
+  });
+    
+  let options = {
+    uri: url,
+    resolveWithFullResponse: true, 
+    method: 'GET',
+    headers: {
+      "Authorization": "Bearer " + access_token,
+    },
+    encoding: null
+  }
+  
+  return new Promise(resolve => {
+    rp.get(options)
+    .then(function (res) {
+      console.log(res.body)
+      resolve(res.body);
+    })
+    .catch(function(err){
+      console.log(err);
+    });
+  });
+}
+
 router.get('/dialog/leaveChart', function(req, res) {
   res.redirect('/public/templates/dialogs/leaveChart.html');
 });
@@ -78,38 +109,6 @@ router.post('/dialog/leaveChart',async function(req, res) {
   });
   return stride.api.messages.sendMessage(req.body.cloudId, req.body.conversationId, {body: doc.toJSON()})
 
-    
-  //simple utility function to download an image from a website
-  async function requestChart(access_token, date) {
-    var url = CHECKIN_BASE_URL + "/api/v2/leave?";
-    console.log(date);
-    date.forEach(function (object) {
-      if (Object.values(object) != '') {
-        url += Object.keys(object) + "=" + Object.values(object) + "&";
-      }
-    });
-    let options = {
-      uri: url,
-      resolveWithFullResponse: true, 
-      method: 'GET',
-      headers: {
-        "Authorization": "Bearer " + access_token,
-      },
-      encoding: null
-    }
-  
-    return new Promise(resolve => {
-      rp.get(options)
-      .then(function (res) {
-        console.log(res.body)
-        resolve(res.body);
-      })
-      .catch(function(err){
-        console.log(err);
-      });
-    });
-  }
-  
   res.send(JSON.stringify({ status: 'Done'}));
 });
 
