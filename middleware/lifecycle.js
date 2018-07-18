@@ -44,7 +44,7 @@ router.get("/descriptor", function(req, res) {
           options: {
             size: {
               width: '500px',
-              height: '500px',
+              height: '300px',
             },
             primaryAction: {
               key: 'dialogAction-sendForm',
