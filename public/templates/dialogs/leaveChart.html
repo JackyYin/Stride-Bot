@@ -6,6 +6,9 @@
     <meta charset="UTF-8">
     <title>Leave Chart Dialog</title>
 
+    <!-- Import local CSS file  -->
+	  <link rel="stylesheet" href="/public/css/dialogs/leaveChart.css"/>
+
     <!-- Import AtlasKit: https://atlaskit.atlassian.com -->
     <link rel="stylesheet" href="//unpkg.com/@atlaskit/css-reset@latest"/>
     <link rel="stylesheet" href="//unpkg.com/@atlaskit/reduced-ui-pack@latest"/>
@@ -13,20 +16,27 @@
     <!-- Import JQuery -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    <!-- Import the Stride Javascript API -->
-    <script src="https://dev-lib.stride.com/javascript/simple-xdm.js"></script>
+    <!-- Import Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css" integrity="sha384-Smlep5jCw/wG7hdkwQ/Z5nLIefveQRIY9nfy6xoR1uRYBtpZgI6339F5dgvm/e9B" crossorigin="anonymous">  
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/js/bootstrap.min.js" integrity="sha384-o+RDsa0aLu++PJvFqy8fFScvbHFLtbvScb8AjopnFD+iEQ7wo/CG0xlczd+2O/em" crossorigin="anonymous"></script>
   
+    <!-- Import the Stride Javascript API -->
+    <script src="https://dev-lib.stride.com/javascript/simple-xdm.js"></script> 
   
     <!-- Import Firebase DB  -->
     <script src="https://www.gstatic.com/firebasejs/5.2.0/firebase.js"></script>
   
     <!-- Import Date Picker Plugin  -->
-	  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+	  <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+  
+    <!-- Import Multiple Select Plugin  -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/css/bootstrap-multiselect.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.15/js/bootstrap-multiselect.js"></script>
   
     <!-- Import local JS file  -->
 	  <script src="/public/js/dialogs/leaveChart.js"></script>
-
 </head>
 <body>
 <p>查詢個人請假狀態,日期為非必填</p>
@@ -39,6 +49,10 @@
     <div class="ak-field-group">
         <label for="end_date">結束日期</label>
         <input type="text" class="ak-field-text" id="end_date" name="end_date" placeholder="">
+    </div>
+     <div class="form-group" id="form-group-types">
+        <label for="types">假別</label>
+       <select class="form-control" id="types" name="types" multiple></select>
     </div>
 </form>
 
