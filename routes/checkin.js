@@ -5,6 +5,7 @@ const Client = require("stride-node-client");
 const { CLIENT_ID, CLIENT_SECRET } = process.env;
 const stride = new Client({ CLIENT_ID, CLIENT_SECRET, NODE_ENV: "production" });
 
+const rp = require("request-promise");
 const firebase = require('firebase');
 var config = {
   apiKey: "AIzaSyDmmMqnwGE-NrhKbiW9XX_XvfppWpDUX70",
@@ -22,6 +23,7 @@ const db = firebase.database();
 const cloudId   = process.env.CLOUD_ID;
 const checkRoom = process.env.CONVERSATION_ID_CHECK_ROOM;
 const obiRoom   = process.env.CONVERSATION_ID_OBI_ROOM;
+const CHECKIN_BASE_URL = process.env.CHECKIN_BASE_URL;
 
 async function getUserObject (email) {
   return await firebase.database().ref('users').orderByChild("email").equalTo(email).once("value")
@@ -69,8 +71,33 @@ router.post('/leave/notify', async function(request, response) {
       headers: { "Content-Type": "text/plain", accept: "application/json" }
     };
     
-    await stride.api.messages.sendMessage(cloudId, checkRoom, opts);
+    await stride.api.messages.sendMessage(cloudId, obiRoom, opts);
   }
+});
+
+router.post('/leave/types',async function(request, response) {
+  console.log(request.body);
+  var url = CHECKIN_BASE_URL + "/api/v2/leave/types";
+  let options = {
+    uri: url,
+    resolveWithFullResponse: true, 
+    method: 'GET',
+    headers: {
+      "Authorization": "Bearer " + request.body.access_token,
+    },
+  }
+  
+  var reply = await rp(options)
+  .then(function (res) {
+    return JSON.parse(res.body);
+  })
+  .catch(function(err){
+    console.log("error: ", err);
+    return err.error.reply_message;
+  });
+  
+  console.log("reply: ", reply);
+  response.send(reply);
 });
 
 module.exports = router;

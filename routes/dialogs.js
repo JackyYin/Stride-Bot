@@ -35,14 +35,18 @@ const randomstring = require('randomstring');
 ]
 ```
 **/
-async function requestChart(access_token, date) {
+async function requestChart(access_token, date, types) {
   var url = CHECKIN_BASE_URL + "/api/v2/leave?";
-  console.log(date);
+  
   date.forEach(function (object) {
     if (Object.values(object) != '') {
       url += Object.keys(object) + "=" + Object.values(object) + "&";
     }
   });
+  
+  types.forEach(function (value) {
+    url += "types[]=" + value + "&";
+  })
     
   let options = {
     uri: url,
@@ -71,7 +75,6 @@ router.get('/dialog/leaveChart', function(req, res) {
 });
 
 router.post('/dialog/leaveChart',async function(req, res) {
-  console.log(req.body);
   
   if (!req.body.access_token) {
     console.log("帳號未註冊");
@@ -86,7 +89,9 @@ router.post('/dialog/leaveChart',async function(req, res) {
     {'start_date': req.body.start_date},
     {'end_date': req.body.end_date},
   ];
-  var stream = await requestChart(req.body.access_token, date);
+  var types = JSON.parse(req.body.types);
+  
+  var stream = await requestChart(req.body.access_token, date, types);
   console.log(stream);
   
   // Then, upload it to Stride

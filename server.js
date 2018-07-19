@@ -23,6 +23,7 @@ app.use(lifecycle);
 //public assets
 app.use('/public/templates', express.static('public/templates'));
 app.use('/public/js', express.static('public/js'));
+app.use('/public/css', express.static('public/css'));
 app.use('/public/img', express.static('public/img'));
 
 //route definition
