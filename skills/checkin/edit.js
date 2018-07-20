@@ -23,7 +23,34 @@ if (!firebase.apps.length) {
 }
 const db = firebase.database();
 
-module.exports = async function ( cloudId, conversationId, messageSenderId) {
+async function getCheckObject(access_token, checkId) {
+  let options = {
+    uri: CHECKIN_BASE_URL + "/api/v2/leave/" + checkId,
+    resolveWithFullResponse: true, 
+    method: 'GET',
+    headers: {
+      "Authorization": "Bearer " + access_token,
+    },
+  }
+  
+  return rp.get(options)
+    .then(function (res) {
+      var message =  JSON.parse(res.body);
+      return {
+        "statusCode": res.statusCode,
+        "message": message,
+      }
+    })
+    .catch(function(err){
+      var message =  JSON.parse(err.error);
+      return {
+        "statusCode": err.statusCode,
+        "message": message,
+      }
+    });
+}
+
+module.exports = async function ( cloudId, conversationId, messageSenderId, checkId) {
 
   var access_token = await db.ref('users/' + messageSenderId).once('value').then(function(snapshot) {
     return snapshot.val().access_token;
@@ -39,30 +66,43 @@ module.exports = async function ( cloudId, conversationId, messageSenderId) {
     return stride.api.messages.sendMessage(cloudId, conversationId, opts)
   }
   
-  const uri = CHECKIN_BASE_URL + '/api/v2/leave/annual/stat';
-  const options = {
-    uri: uri,
-    method: 'GET',
-    headers: {
-      "Authorization": "Bearer " + access_token,
-      "cache-control": "no-cache"
-    }
-  }
-  var message = await rp(options, function(err, response, body) {
-    if(err) {
-      console.log(err);
-    }
-  }).then(function (res) {
-    var obj = JSON.parse(res);
-    return obj.reply_message;
-  }).catch(function(err){
-    console.log(err);
-  });
-  let opts = {
-      body: message,
+  var checkObject = await getCheckObject(access_token, checkId); 
+      
+  if (checkObject.statusCode == 400) {
+    let opts = {
+      body: checkObject.message.reply_message,
       headers: { "Content-Type": "text/plain", accept: "application/json" }
     };
+    return stride.api.messages.sendMessage(cloudId, conversationId, opts)
+  }
+  
+  var parameters = {
+    "callerId": messageSenderId,
+    "checkId": checkId,
+  }
+  
+  var message = {
+    "type": "doc",
+    "version": 1,
+    "content": [{
+      "type": "paragraph",
+      "content":[{
+        "type": "text",
+        "text": "點我編輯假單 (" + checkId + ")",
+        "marks": [{
+          "type": "action",
+          "attrs": {
+            "title": "編輯假單",
+            "target": {
+              "key": "actionTarget-sendToDialog-checkEdit"
+            },
+            "parameters": parameters,
+          }
+        }]
+      }]
+    }]
+  };
   
   //send response to the conversation
-  return stride.api.messages.sendMessage(cloudId, conversationId, opts)
+  return stride.api.messages.sendMessage(cloudId, conversationId, {body: message})
 };

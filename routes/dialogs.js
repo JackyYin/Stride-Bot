@@ -70,6 +70,36 @@ async function requestChart(access_token, date, types) {
   });
 }
 
+async function updateLeave(data)
+{
+  var url = CHECKIN_BASE_URL + "/api/v2/leave/" + data.check_id;
+  let options = {
+    uri: url,
+    resolveWithFullResponse: true, 
+    method: 'PUT',
+    headers: {
+      "Authorization": "Bearer " + data.access_token,
+    },
+    body: {
+      "start_time": data.start_time,
+      "end_time": data.end_time,
+      "leave_type": data.leave_type,
+      "leave_reason": data.leave_reason,
+    },
+    json: true 
+  }
+  
+  return new Promise(resolve => {
+    rp(options)
+    .then(function (res) {
+      resolve(res.body);
+    })
+    .catch(function(err){
+      console.log("err:", err);
+    });
+  });
+}
+
 router.get('/dialog/leaveChart', function(req, res) {
   res.redirect('/public/templates/dialogs/leaveChart.html');
 });
@@ -113,6 +143,42 @@ router.post('/dialog/leaveChart',async function(req, res) {
     "collection": req.body.conversationId
   });
   return stride.api.messages.sendMessage(req.body.cloudId, req.body.conversationId, {body: doc.toJSON()})
+
+  res.send(JSON.stringify({ status: 'Done'}));
+});
+
+router.get('/dialog/checkEdit', function(req, res) {
+  res.redirect('/public/templates/dialogs/checkEdit.html');
+});
+
+router.post('/dialog/checkEdit',async function(req, res) {
+  
+  if (!req.body.access_token) {
+    console.log("帳號未註冊");
+    let opts = {
+      body: "請先完成註冊流程",
+      headers: { "Content-Type": "text/plain", accept: "application/json" }
+    };
+    return stride.api.messages.sendMessage(req.body.cloudId, req.body.conversationId, opts)
+  }
+  
+  if (req.body.callerId != req.body.clickerId) {
+    let opts = {
+      body: "沒有權限編輯此假單",
+      headers: { "Content-Type": "text/plain", accept: "application/json" }
+    };  
+    return stride.api.messages.sendMessage(req.body.cloudId, req.body.conversationId, opts)
+  }
+  
+  var response = await updateLeave(req.body);
+  console.log(response);
+  
+  let opts = {
+    body: response.reply_message,
+    headers: { "Content-Type": "text/plain", accept: "application/json" }
+  };
+  
+  return stride.api.messages.sendMessage(req.body.cloudId, req.body.conversationId, opts)
 
   res.send(JSON.stringify({ status: 'Done'}));
 });

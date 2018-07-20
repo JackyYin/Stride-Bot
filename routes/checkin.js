@@ -35,6 +35,34 @@ async function getUserObject (email) {
   });
 }
 
+async function getCheckObject(access_token, checkId) {
+  let options = {
+    uri: CHECKIN_BASE_URL + "/api/v2/leave/" + checkId,
+    resolveWithFullResponse: true, 
+    method: 'GET',
+    headers: {
+      "Authorization": "Bearer " + access_token,
+    },
+  }
+  
+  return rp.get(options)
+    .then(function (res) {
+      var message =  JSON.parse(res.body);
+      return {
+        "statusCode": res.statusCode,
+        "message": message,
+      }
+    })
+    .catch(function(err){
+      var message =  JSON.parse(err.error);
+      return {
+        "statusCode": err.statusCode,
+        "message": message,
+      }
+    });
+}
+
+
 router.post('/auth/verify', function(request, response) {
   console.log(request.body.reply_message);
   firebase.database().ref('users').orderByChild("email").equalTo(request.body.reply_message.email).once("value",function(snapshot){
@@ -71,13 +99,13 @@ router.post('/leave/notify', async function(request, response) {
       headers: { "Content-Type": "text/plain", accept: "application/json" }
     };
     
-    await stride.api.messages.sendMessage(cloudId, obiRoom, opts);
+    await stride.api.messages.sendMessage(cloudId, checkRoom, opts);
   }
 });
 
 router.post('/leave/types',async function(request, response) {
   console.log(request.body);
-  var url = CHECKIN_BASE_URL + "/api/v2/leave/types";
+  var url = CHECKIN_BASE_URL + "/api/v2/leave/types/list";
   let options = {
     uri: url,
     resolveWithFullResponse: true, 
@@ -92,12 +120,29 @@ router.post('/leave/types',async function(request, response) {
     return JSON.parse(res.body);
   })
   .catch(function(err){
-    console.log("error: ", err);
+    console.log("error: ", JSON.parse(err.error));
     return err.error.reply_message;
   });
   
-  console.log("reply: ", reply);
+  //console.log("reply: ", reply);
   response.send(reply);
+});
+
+router.post('/leave/show',async function(request, response) {
+  console.log(request.body);
+  
+  var checkObject = await getCheckObject(request.body.access_token, request.body.checkId);
+  console.log(checkObject);
+  
+  if (checkObject.statusCode == 400) {
+    let opts = {
+      body: checkObject.message.reply_message,
+      headers: { "Content-Type": "text/plain", accept: "application/json" }
+    };
+    return stride.api.messages.sendMessage(cloudId, conversationId, opts)
+  }
+  
+  response.send(checkObject.message.reply_message);
 });
 
 module.exports = router;

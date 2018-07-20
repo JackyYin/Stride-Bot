@@ -36,7 +36,12 @@ const stride = require('../client');
  **/
 router.get('/glance/leaveChart/state', cors(), (req, res) => {
   console.log("glnace leaveChart state");
-  res.send(JSON.stringify({ label: { value: 'Leave Chart Form' } }));
+  res.send(JSON.stringify({ label: { value: '假別長條圖' } }));
+});
+
+router.get('/glance/checkEdit/state', cors(), (req, res) => {
+  console.log("glnace checkEdit state");
+  res.send(JSON.stringify({ label: { value: '編輯假單' } }));
 });
 
 router.post('/updateGlanceState', async (req, res, next) => {
