@@ -22,6 +22,29 @@ if (!firebase.apps.length) {
 }
 const db = firebase.database();
 
+async function requestChart(access_token) {
+  let options = {
+    uri: CHECKIN_BASE_URL + "/api/v2/leave",
+    resolveWithFullResponse: true, 
+    method: 'GET',
+    headers: {
+      "Authorization": "Bearer " + access_token,
+    },
+    encoding: null
+  }
+  
+  return new Promise(resolve => {
+    rp.get(options)
+    .then(function (res) {
+      console.log(res.body)
+      resolve(res.body);
+    })
+    .catch(function(err){
+      console.log(err);
+    });
+  });
+}
+
 module.exports = async function ( cloudId, conversationId, messageSenderId) {
   
   var access_token = await db.ref('users/' + messageSenderId).once('value').then(function(snapshot) {
@@ -61,29 +84,6 @@ module.exports = async function ( cloudId, conversationId, messageSenderId) {
   });
   return stride.api.messages.sendMessage(cloudId, conversationId, {body: doc.toJSON()})
 };
-    
-//simple utility function to download an image from a website
-async function requestChart(access_token) {
-  let options = {
-    uri: CHECKIN_BASE_URL + "/api/v2/leave",
-    resolveWithFullResponse: true, 
-    method: 'GET',
-    headers: {
-      "Authorization": "Bearer " + access_token,
-    },
-    encoding: null
-  }
-  
-  return new Promise(resolve => {
-    rp.get(options)
-    .then(function (res) {
-      console.log(res.body)
-      resolve(res.body);
-    })
-    .catch(function(err){
-      console.log(err);
-    });
-  });
-}
+
 
   

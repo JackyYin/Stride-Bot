@@ -90,12 +90,12 @@ app.post("/mentions", auth, async (req, res, next) => {
         .then(successHandler, failureHandler);
       break;
     case 'chart':
-      await require('./skills/checkin/chart')(cloudId,conversationId, senderId)
+      await require('./skills/checkin/chart')(cloudId, conversationId, senderId)
         .then(successHandler, failureHandler);
       break;
-    case 'direct':
-       let message = messageText.replace(`@${(await getBotsUser()).name}`, '').toLocaleLowerCase().trim().split(' ')[1];
-       await require('./skills/direct')(cloudId,conversationId, senderId, message)
+    case 'edit':
+      let check_id = messageText.replace(`@${(await getBotsUser()).name}`, '').toLocaleLowerCase().trim().split(' ')[1];
+      await require('./skills/checkin/edit')(cloudId, conversationId, senderId, check_id)
         .then(successHandler, failureHandler);
       break;
     case '2':

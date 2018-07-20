@@ -39,7 +39,7 @@ router.get("/descriptor", function(req, res) {
         {
           key: 'dialog-leaveChart',
           title: {
-            value: 'Leave Chart Dialog',
+            value: '假別長條圖表單',
           },
           options: {
             size: {
@@ -64,6 +64,34 @@ router.get("/descriptor", function(req, res) {
           url: '/dialogs/dialog/leaveChart',
           authentication: 'jwt',
         },
+        {
+          key: 'dialog-checkEdit',
+          title: {
+            value: '編輯假單表單',
+          },
+          options: {
+            size: {
+              width: '600px',
+              height: '400px',
+            },
+            primaryAction: {
+              key: 'dialogAction-sendForm',
+              name: {
+                value: 'Send',
+              },
+            },
+            secondaryActions: [
+              {
+                key: 'dialogAction-closeDialog',
+                name: {
+                  value: 'Close',
+                },
+              },
+            ],
+          },
+          url: '/dialogs/dialog/checkEdit',
+          authentication: 'jwt',
+        },
       ],
       "chat:glance": [
         {
@@ -77,6 +105,19 @@ router.get("/descriptor", function(req, res) {
           },
           target: 'actionTarget-sendToDialog-leaveChart',
           queryUrl: '/glances/glance/leaveChart/state',
+          authentication: 'jwt',
+        },
+        {
+          key: 'glance-checkEdit',
+          name: {
+            value: 'Check Edit',
+          },
+          icon: {
+            'url': '/public/img/leaveChartGlance.png',
+            'url@2x': '/public/img/leaveChartGlance.png',
+          },
+          target: 'actionTarget-sendToDialog-checkEdit',
+          queryUrl: '/glances/glance/checkEdit/state',
           authentication: 'jwt',
         }
       ],
@@ -94,6 +135,12 @@ router.get("/descriptor", function(req, res) {
           key: 'actionTarget-sendToDialog-leaveChart',
           openDialog: {
             key: 'dialog-leaveChart',
+          },
+        },
+        {
+          key: 'actionTarget-sendToDialog-checkEdit',
+          openDialog: {
+            key: 'dialog-checkEdit',
           },
         },
       ]

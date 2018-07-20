@@ -1,11 +1,15 @@
 #form-group-types {
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 #form-group-types label {
   color: #6B778C;
   font-size: 12px;
   font-weight: 600;
+}
+
+#check_id {
+  background: #DDDDDD;
 }
 
 
